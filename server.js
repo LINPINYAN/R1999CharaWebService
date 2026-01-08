@@ -45,7 +45,7 @@ app.post('/addcharacter', async (req, res) => {
     try{
         let connection = await mysql.createConnection(dbConfig);
         await connection. execute('INSERT INTO characters (chara_name, chara_pic) VALUES (?,?)', [chara_name, chara_pic]);
-        res.status(201).json({message: 'Character '+chara_name+'added successfully'})
+        res.status(201).json({message: 'Character '+chara_name+' added successfully'})
     } catch(err) {
         console.error(err);
         res.status(500).json({message: 'Server error - could not add character '+chara_name});
@@ -64,7 +64,7 @@ app.post('/updatecharacter', async (req, res) => {
             return res.status(404).json({ message: 'Character with ID '+id+' not found' });
         }
 
-        res.status(200).json({ message: 'Character '+chara_name+'updated successfully' });
+        res.status(200).json({ message: 'Character '+chara_name+' updated successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error - could not update character '+chara_name });
@@ -82,7 +82,7 @@ app.post('/deletecharacter', async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Character with ID '+id+' not found' });
         }
-        res.status(200).json({message: chara_name+' with ID '+id+' deleted successfully'})
+        res.status(200).json({message: 'Character with ID '+id+' deleted successfully'})
     } catch(err) {
         console.error(err);
         res.status(500).json({message: 'Server error - could not delete character '+chara_name +' '+ id});
