@@ -77,7 +77,11 @@ app.post('/deletecharacter', async (req, res) => {
     const {id, chara_name} = req.body;
     try{
         let connection = await mysql.createConnection(dbConfig);
-        await connection. execute('DELETE FROM characters WHERE id = ?', [id]);
+        const[result]= await connection.execute('DELETE FROM characters WHERE id = ?', [id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Character with ID '+id+' not found' });
+        }
         res.status(200).json({message: chara_name+' with ID '+id+' deleted successfully'})
     } catch(err) {
         console.error(err);
