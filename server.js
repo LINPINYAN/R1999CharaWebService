@@ -52,39 +52,33 @@ app.post('/addcharacter', async (req, res) => {
     }
 });
 
-//Update a character
-app.post('/updatecharacter', async (req, res) => {
-    const { id, chara_name, chara_pic } = req.body;
+
+// Example Route: Update a character
+app.put('/updatecharacter/:id', async (req, res) => {
+    const { id } = req.params;
+    const { chara_name, chara_pic } = req.body;
     try {
         let connection = await mysql.createConnection(dbConfig);
-        const [result] = await connection.execute(
-            'UPDATE characters SET chara_name = ?, chara_pic = ? WHERE id = ?', [chara_name, chara_pic, id]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Character with ID '+id+' not found' });
-        }
-
-        res.status(200).json({ message: 'Character '+chara_name+' updated successfully' });
+        await connection.execute(
+            'UPDATE characters SET chara_name=?, chara_pic=? WHERE id=?',
+            [chara_name, chara_pic, id]
+        );
+        res.status(201).json({ message: 'Character ' + id + ' updated successfully!' });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Server error - could not update character '+chara_name });
+        res.status(500).json({ message: 'Server error - could not update character ' + id });
     }
 });
 
-
-//Delete a character
-app.post('/deletecharacter', async (req, res) => {
-    const {id, chara_name} = req.body;
-    try{
+// Example Route: Delete a character
+app.delete('/deletecharacter/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
         let connection = await mysql.createConnection(dbConfig);
-        const[result]= await connection.execute('DELETE FROM characters WHERE id = ?', [id]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Character with ID '+id+' not found' });
-        }
-        res.status(200).json({message: 'Character with ID '+id+' deleted successfully'})
-    } catch(err) {
+        await connection.execute('DELETE FROM characters WHERE id=?', [id]);
+        res.status(201).json({ message: 'Character ' + id + ' deleted successfully!' });
+    } catch (err) {
         console.error(err);
-        res.status(500).json({message: 'Server error - could not delete character '+chara_name +' '+ id});
+        res.status(500).json({ message: 'Server error - could not delete character ' + id });
     }
 });
